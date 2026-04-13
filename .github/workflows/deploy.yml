@@ -11,16 +11,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Deploy to SFTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.6
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./src/
-        server-dir: ${{ secrets.FTP_REMOTE_PATH }}
-        protocol: ftp
-        dangerous-clean-slate: false
-        exclude: |
-          **/.git*
-          **/node_modules/**
+    - name: Deploy via SFTP with sshpass
+      run: |
+        apt-get update && apt-get install -y sshpass rsync
+        sshpass -p "${{ secrets.FTP_PASSWORD }}" rsync -avz --delete \
+          -e "ssh -o StrictHostKeyChecking=no" \
+          ./src/ \
+          "${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}:${{ secrets.FTP_REMOTE_PATH }}"
+      shell: bash
