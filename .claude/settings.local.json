@@ -5,7 +5,10 @@
       "Bash(timeout 5 node index.js)",
       "Bash(timeout 3 node index.js)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(node server.js)",
+      "Bash(deploy.bat)",
+      "Bash(cmd.exe /c deploy.bat)"
     ]
   },
   "enabledPlugins": {

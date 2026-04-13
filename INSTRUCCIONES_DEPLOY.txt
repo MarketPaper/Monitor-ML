@@ -1,0 +1,77 @@
+================================================================================
+  DEPLOYING MONITOR ML A SPACESHIP - INSTRUCCIONES MANUALES
+================================================================================
+
+El FTP directo ha tenido problemas de conectividad. La forma MAS CONFIABLE es:
+
+PASO 1: Entra al Panel de Control de Spaceship
+  - URL: https://spaceship.com (o tu panel de control)
+  - Login con tus credenciales
+
+PASO 2: Abre el File Manager (Gestor de Archivos)
+  - Busca la opción "File Manager" o "Administrador de Archivos"
+
+PASO 3: Navega a la carpeta raiz de tu sitio
+  - Ruta: /home/jmyqoqyfsb/mlibretools.aigents.com.ar/
+  - Aqui estan los archivos del sitio
+
+PASO 4: Sube los archivos desde la carpeta "src"
+
+  Las carpetas que necesitas actualizar son:
+
+  ✓ assets/     (estilos CSS)
+  ✓ js/         (scripts JavaScript, INCLUYENDO js/modules/navigation.js NUEVO)
+
+  Opciones de upload:
+  A) Drag & drop: Arrastra las carpetas desde Windows Explorer al File Manager
+  B) Upload button: Click en boton de upload y selecciona las carpetas
+
+PASO 5: Asegurate de que subes:
+  - js/modules/navigation.js (ARCHIVO NUEVO - IMPORTANTE)
+  - js/main.js (actualizado)
+  - assets/styles/layout.css (actualizado)
+  - assets/styles/components.css (actualizado)
+  - index.html (actualizado)
+
+PASO 6: Limpia el cache del navegador
+  - En el navegador: Presiona Ctrl + Shift + Delete (o Cmd + Shift + Delete en Mac)
+  - Selecciona "Limpiar todo" o "Limpiar cache"
+  - Vuelve a cargar la pagina: Ctrl + F5
+
+PASO 7: Verifica que funciona
+  - Abre https://mlibretools.aigents.com.ar
+  - Conéctate a Supabase
+  - Deberías ver el SIDEBAR en el lado izquierdo con los 9 itemes
+
+================================================================================
+  ARCHIVOS MODIFICADOS (Git Commit: 73e5615)
+================================================================================
+
+Nuevos archivos:
+  - src/js/modules/navigation.js
+
+Archivos modificados:
+  - src/index.html
+  - src/js/main.js
+  - src/assets/styles/layout.css
+  - src/assets/styles/components.css
+
+================================================================================
+  SI PREFIERES DEPLOY AUTOMATICO
+================================================================================
+
+Hemos preparado scripts para hacer deploy automatico:
+
+OPCION 1: POWERSHELL (Recomendado para Windows 10/11)
+  - Doble click en: DEPLOY_SPACESHIP.cmd
+  - Se abrira una ventana PowerShell
+  - Espera a que termine
+  - Presiona Enter para cerrar
+
+OPCION 2: FTP manual desde CMD
+  - Doble click en: deploy.bat
+  - Espera a que conecte y suba los archivos
+
+Si alguno da error, usa las INSTRUCCIONES MANUALES arriba.
+
+================================================================================
