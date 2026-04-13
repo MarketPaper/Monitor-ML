@@ -1,10 +1,37 @@
 const readline = require('readline');
 const fs = require('fs');
-const crypto = require('crypto'); // Librería nativa para encriptar
+const path = require('path');
+const crypto = require('crypto');
 
-const APP_ID = '632329160918931';
-const CLIENT_SECRET = 'zZeOE2wQEjYTEd6oT47ziLcdyELSVlon';
+const EMPRESAS_FILE = path.join(__dirname, 'empresas.json');
 const REDIRECT_URI = 'https://art2mart.com.ar';
+
+const empresaKey = process.argv[2];
+if (!empresaKey) {
+    console.log('Uso: node auth.js <nombre_empresa>');
+    if (fs.existsSync(EMPRESAS_FILE)) {
+        const { empresas } = JSON.parse(fs.readFileSync(EMPRESAS_FILE, 'utf8'));
+        console.log('\nEmpresas disponibles:');
+        Object.keys(empresas).forEach(k => console.log(`  - ${k}  (${empresas[k].nombre || ''})`));
+    }
+    process.exit(1);
+}
+
+if (!fs.existsSync(EMPRESAS_FILE)) {
+    console.log('❌ No existe empresas.json.');
+    process.exit(1);
+}
+
+const data = JSON.parse(fs.readFileSync(EMPRESAS_FILE, 'utf8'));
+const empresa = data.empresas[empresaKey];
+if (!empresa) {
+    console.log(`❌ Empresa "${empresaKey}" no encontrada en empresas.json.`);
+    console.log('Disponibles:', Object.keys(data.empresas).join(', '));
+    process.exit(1);
+}
+
+const APP_ID = empresa.ml_app_id;
+const CLIENT_SECRET = empresa.ml_client_secret;
 
 // ==========================================
 // 1. GENERADOR DE SEGURIDAD PKCE
@@ -16,7 +43,6 @@ function base64URLEncode(buffer) {
         .replace(/=/g, '');
 }
 
-// Generamos el código secreto (Verifier) y el reto público (Challenge)
 const verifier = base64URLEncode(crypto.randomBytes(32));
 const challenge = base64URLEncode(crypto.createHash('sha256').update(verifier).digest());
 
@@ -26,8 +52,8 @@ const challenge = base64URLEncode(crypto.createHash('sha256').update(verifier).d
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
 console.log('\n======================================================');
+console.log(`Empresa: ${empresa.nombre || empresaKey}`);
 console.log('PASO 1: Abre este NUEVO enlace (CTRL + Clic):');
-// Fíjate que ahora la URL incluye el code_challenge
 console.log(`https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=${APP_ID}&redirect_uri=${REDIRECT_URI}&code_challenge=${challenge}&code_challenge_method=S256`);
 console.log('======================================================\n');
 console.log('PASO 2: Inicia sesión y Permite el acceso.');
@@ -50,20 +76,20 @@ rl.question('PASO 3: Pega aquí la URL completa de art2mart que te devolvió el 
                 client_secret: CLIENT_SECRET,
                 code: codeMatch[1],
                 redirect_uri: REDIRECT_URI,
-                code_verifier: verifier // ¡Aquí enviamos la pieza criptográfica que exigían!
+                code_verifier: verifier
             })
         });
 
-        const data = await response.json();
+        const result = await response.json();
 
-        if (data.refresh_token) {
-            fs.writeFileSync('ml_token.json', JSON.stringify({ refresh_token: data.refresh_token }));
+        if (result.refresh_token) {
+            data.empresas[empresaKey].ml_refresh_token = result.refresh_token;
+            fs.writeFileSync(EMPRESAS_FILE, JSON.stringify(data, null, 2));
             console.log('\n======================================================');
-            console.log('✅ ¡ÉXITO ROTUNDO! Se ha creado el archivo "ml_token.json".');
-            console.log('El candado de Mercado Libre ha sido superado.');
+            console.log(`✅ ¡ÉXITO! refresh_token guardado en empresas.json → "${empresaKey}".`);
             console.log('======================================================\n');
         } else {
-            console.log('\n❌ Error devuelto por Mercado Libre:', data);
+            console.log('\n❌ Error devuelto por Mercado Libre:', result);
         }
     } catch (error) { console.error('Error crítico:', error); }
     rl.close();

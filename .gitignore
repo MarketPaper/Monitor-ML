@@ -3,6 +3,7 @@
 .env.local
 .env.*.local
 ml_token.json
+empresas.json
 
 # === DEPENDENCIAS ===
 node_modules/

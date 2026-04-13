@@ -89,6 +89,13 @@ src/
 
 ## Historial de decisiones arquitectónicas
 
+### 2026-04-13 — Multi-empresa (CLI) + etiqueta de empresa (web)
+- **CLI**: Reemplazamos `ml_token.json` y credenciales hardcodeadas por `empresas.json` (gitignored). Cada empresa tiene: `nombre`, `ml_app_id`, `ml_client_secret`, `ml_refresh_token`, `supabase_url`, `supabase_key`.
+  - `monitor.js`: al iniciar, pide elegir empresa (si hay >1); rota el token y lo persiste en `empresas.json`.
+  - `auth.js <empresa>`: re-autentica una empresa existente; reescribe sólo su `ml_refresh_token`. Para agregar una empresa nueva, se edita `empresas.json` a mano con las credenciales y se corre `node auth.js nombre`.
+- **Web**: El login sigue pidiendo Supabase URL+Key (la web **no** lee `empresas.json`, el sitio es público). Tras conectar con una URL nueva, un `prompt()` único pregunta el nombre de la empresa y lo guarda en `localStorage.sb_empresas_by_url` (map URL → nombre). El header pasa de "Monitor de Competencia ML - v1.0" a `"Monitor de <empresa>"`.
+- **Por qué**: 1 a 3 clientes por ahora, cada uno con su proyecto Supabase y su app ML independiente. Archivo único (opción A) porque el volumen es bajo. Prompt interactivo (opción C) para no romper el arg `categoria` existente.
+
 ### 2026-04-11 — Refactor frontend: HTML monolítico → estructura modular
 - **Antes**: 771 líneas en un archivo HTML (difícil de mantener).
 - **Ahora**: Estructura profesional con separación clara:

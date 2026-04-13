@@ -167,6 +167,27 @@ class SupabaseService {
     hasCachedCredentials() {
         return !!(this.cachedCredentials.url && this.cachedCredentials.key);
     }
+
+    /**
+     * Devuelve el nombre de empresa guardado para una URL de Supabase (o null).
+     */
+    getEmpresaForUrl(url) {
+        try {
+            const map = JSON.parse(localStorage.getItem('sb_empresas_by_url') || '{}');
+            return map[url] || null;
+        } catch {
+            return null;
+        }
+    }
+
+    /**
+     * Asocia un nombre de empresa a una URL de Supabase en localStorage.
+     */
+    setEmpresaForUrl(url, nombre) {
+        const map = JSON.parse(localStorage.getItem('sb_empresas_by_url') || '{}');
+        map[url] = nombre;
+        localStorage.setItem('sb_empresas_by_url', JSON.stringify(map));
+    }
 }
 
 // Instancia global

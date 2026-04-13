@@ -3,6 +3,7 @@
 class App {
     constructor() {
         this.elements = {
+            appTitle: document.getElementById('appTitle'),
             connectionIndicator: document.getElementById('connectionIndicator'),
             connectionText: document.getElementById('connectionText'),
             dbConfigSection: document.getElementById('dbConfigSection'),
@@ -77,6 +78,16 @@ class App {
         try {
             await supabaseService.connect(url, key);
 
+            // Resolver nombre de empresa: si no hay uno guardado para esta URL, pedirlo una vez.
+            let empresa = supabaseService.getEmpresaForUrl(url);
+            if (!empresa) {
+                empresa = (prompt('¿Cómo se llama esta empresa?') || '').trim();
+                if (empresa) {
+                    supabaseService.setEmpresaForUrl(url, empresa);
+                }
+            }
+            this._updateAppTitle(empresa);
+
             this.elements.connectionIndicator.classList.add('connected');
             this.elements.connectionIndicator.classList.remove('error');
             this.elements.connectionText.textContent = CONFIG.MESSAGES.CONNECTED;
@@ -101,6 +112,17 @@ class App {
                 lucide.createIcons();
             }
         }
+    }
+
+    /**
+     * Actualiza el título del header con el nombre de empresa.
+     * @private
+     */
+    _updateAppTitle(empresa) {
+        const nombre = (empresa || '').trim();
+        this.elements.appTitle.textContent = nombre
+            ? `Monitor de ${nombre}`
+            : 'Monitor de Competencia ML - v1.0';
     }
 
     /**
