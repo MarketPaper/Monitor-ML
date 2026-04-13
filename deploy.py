@@ -1,71 +1,84 @@
 #!/usr/bin/env python3
 """
-Deploy Monitor ML to Spaceship via FTP
+Deploy Monitor ML to Spaceship via FTPS (FTP + TLS explícito).
+Spaceship exige TLS — FTP plano da timeout.
 """
 import ftplib
-import os
+import socket
 import sys
 from pathlib import Path
 
-# Configuración
+# Asegurar salida UTF-8 en consolas Windows
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 FTP_HOST = "mlibretools.aigents.com.ar"
 FTP_USER = "ftplay@mlibretools.aigents.com.ar"
 FTP_PASS = "7948.TresSeis"
 FTP_PATH = "/home/jmyqoqyfsb/mlibretools.aigents.com.ar"
 LOCAL_PATH = "src"
 
-def upload_directory(ftp, local_dir, remote_dir):
-    """Sube recursivamente todos los archivos de un directorio local a FTP"""
-    local_path = Path(local_dir)
+socket.setdefaulttimeout(60)
 
-    for item in local_path.rglob('*'):
-        if item.is_file():
-            relative_path = item.relative_to(local_path)
-            remote_file_path = f"{remote_dir}/{str(relative_path).replace(chr(92), '/')}"
 
-            # Crear directorio remoto si no existe
-            remote_dir_path = remote_file_path.rsplit('/', 1)[0]
+def ensure_remote_dir(ftp, remote_dir):
+    """Crea recursivamente los directorios remotos que falten."""
+    parts = remote_dir.strip("/").split("/")
+    cur = ""
+    for p in parts:
+        cur += "/" + p
+        try:
+            ftp.cwd(cur)
+        except ftplib.error_perm:
             try:
-                ftp.cwd(remote_dir_path)
-                ftp.cwd(remote_dir)
-            except ftplib.all_errors:
-                parts = remote_dir_path.split('/')
-                for i in range(len(parts)):
-                    try:
-                        ftp.cwd('/'.join(parts[:i+1]))
-                    except ftplib.all_errors:
-                        ftp.mkd('/'.join(parts[:i+1]))
-                        ftp.cwd('/'.join(parts[:i+1]))
+                ftp.mkd(cur)
+                ftp.cwd(cur)
+            except ftplib.error_perm:
+                pass
 
-            # Subir archivo
-            print(f"Subiendo: {relative_path}")
-            with open(item, 'rb') as f:
-                ftp.storbinary(f"STOR {item.name}", f)
+
+def upload_directory(ftp, local_dir, remote_dir):
+    local_path = Path(local_dir)
+    count = 0
+    for item in sorted(local_path.rglob("*")):
+        if not item.is_file():
+            continue
+        rel = item.relative_to(local_path).as_posix()
+        remote_file = f"{remote_dir}/{rel}"
+        remote_sub = remote_file.rsplit("/", 1)[0]
+        ensure_remote_dir(ftp, remote_sub)
+        ftp.cwd(remote_sub)
+        with open(item, "rb") as f:
+            ftp.storbinary(f"STOR {item.name}", f)
+        print(f"[ok] {rel}")
+        count += 1
+    return count
+
 
 def main():
-    print("\n=== DEPLOY A SPACESHIP ===\n")
-
+    print("\n=== DEPLOY A SPACESHIP (FTPS) ===\n")
     try:
         print(f"Conectando a {FTP_HOST}...")
-        ftp = ftplib.FTP(FTP_HOST)
+        ftp = ftplib.FTP_TLS(FTP_HOST)
         ftp.login(FTP_USER, FTP_PASS)
-        print(f"✓ Conectado como {FTP_USER}\n")
+        ftp.prot_p()
+        print(f"[OK] Conectado como {FTP_USER}\n")
 
-        print(f"Navegando a {FTP_PATH}...")
         ftp.cwd(FTP_PATH)
-        print(f"✓ Directorio remoto: {FTP_PATH}\n")
+        print(f"Subiendo desde '{LOCAL_PATH}' a '{FTP_PATH}'...\n")
 
-        print(f"Subiendo archivos desde {LOCAL_PATH}...\n")
-        upload_directory(ftp, LOCAL_PATH, FTP_PATH)
+        count = upload_directory(ftp, LOCAL_PATH, FTP_PATH)
 
         ftp.quit()
-
-        print(f"\n✓ Deploy completado!")
-        print(f"Sitio: https://mlibretools.aigents.com.ar/")
+        print(f"\n[OK] Deploy completado — {count} archivos subidos.")
+        print("Sitio: https://mlibretools.aigents.com.ar/")
 
     except Exception as e:
-        print(f"\n✗ Error en el deploy: {e}")
+        print(f"\n[ERROR] Deploy fallido: {e!r}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
