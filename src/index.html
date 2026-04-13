@@ -41,6 +41,49 @@
         </div>
     </header>
 
+    <div class="app-body">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="sidebar hidden">
+            <nav class="sidebar-nav">
+                <button class="sidebar-nav-item" data-section="panel" title="Mi Panel">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Mi Panel</span>
+                </button>
+                <button class="sidebar-nav-item" data-section="mercadolibre" title="Mi MercadoLibre">
+                    <i data-lucide="store"></i>
+                    <span>Mi MercadoLibre</span>
+                </button>
+                <button class="sidebar-nav-item" data-section="rentabilidad" title="Rentabilidad">
+                    <i data-lucide="trending-up"></i>
+                    <span>Rentabilidad</span>
+                </button>
+                <button class="sidebar-nav-item" data-section="lucro-cesante" title="Lucro Cesante">
+                    <i data-lucide="alert-triangle"></i>
+                    <span>Lucro Cesante</span>
+                </button>
+                <button class="sidebar-nav-item" data-section="full-semanal" title="Plan FULL Semanal">
+                    <i data-lucide="truck"></i>
+                    <span>Plan FULL Semanal</span>
+                </button>
+                <button class="sidebar-nav-item" data-section="demanda" title="Predecir Demanda">
+                    <i data-lucide="bar-chart-2"></i>
+                    <span>Predecir Demanda</span>
+                </button>
+                <button class="sidebar-nav-item" data-section="opiniones" title="Opiniones">
+                    <i data-lucide="star"></i>
+                    <span>Opiniones</span>
+                </button>
+                <button class="sidebar-nav-item" data-section="preguntas" title="Preguntas">
+                    <i data-lucide="message-circle"></i>
+                    <span>Preguntas</span>
+                </button>
+                <button class="sidebar-nav-item" data-section="competencia" title="Competencia">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Competencia</span>
+                </button>
+            </nav>
+        </aside>
+
     <main>
         <!-- Sección de configuración de DB -->
         <div id="dbConfigSection" class="db-config-section">
@@ -66,8 +109,82 @@
             </div>
         </div>
 
-        <!-- Sección del dashboard -->
-        <div id="dashboardSection" class="hidden">
+        <!-- Secciones del Panel Lateral -->
+
+        <!-- Mi Panel -->
+        <div id="section-panel" class="section-view hidden">
+            <div class="section-placeholder">
+                <i data-lucide="layout-dashboard" class="placeholder-icon"></i>
+                <h2>Mi Panel</h2>
+                <p>Próximamente...</p>
+            </div>
+        </div>
+
+        <!-- Mi MercadoLibre -->
+        <div id="section-mercadolibre" class="section-view hidden">
+            <div class="section-placeholder">
+                <i data-lucide="store" class="placeholder-icon"></i>
+                <h2>Mi MercadoLibre</h2>
+                <p>Próximamente...</p>
+            </div>
+        </div>
+
+        <!-- Rentabilidad -->
+        <div id="section-rentabilidad" class="section-view hidden">
+            <div class="section-placeholder">
+                <i data-lucide="trending-up" class="placeholder-icon"></i>
+                <h2>Rentabilidad</h2>
+                <p>Próximamente...</p>
+            </div>
+        </div>
+
+        <!-- Lucro Cesante -->
+        <div id="section-lucro-cesante" class="section-view hidden">
+            <div class="section-placeholder">
+                <i data-lucide="alert-triangle" class="placeholder-icon"></i>
+                <h2>Lucro Cesante</h2>
+                <p>Próximamente...</p>
+            </div>
+        </div>
+
+        <!-- Plan FULL Semanal -->
+        <div id="section-full-semanal" class="section-view hidden">
+            <div class="section-placeholder">
+                <i data-lucide="truck" class="placeholder-icon"></i>
+                <h2>Plan FULL Semanal</h2>
+                <p>Próximamente...</p>
+            </div>
+        </div>
+
+        <!-- Predecir Demanda -->
+        <div id="section-demanda" class="section-view hidden">
+            <div class="section-placeholder">
+                <i data-lucide="bar-chart-2" class="placeholder-icon"></i>
+                <h2>Predecir Demanda</h2>
+                <p>Próximamente...</p>
+            </div>
+        </div>
+
+        <!-- Opiniones -->
+        <div id="section-opiniones" class="section-view hidden">
+            <div class="section-placeholder">
+                <i data-lucide="star" class="placeholder-icon"></i>
+                <h2>Opiniones</h2>
+                <p>Próximamente...</p>
+            </div>
+        </div>
+
+        <!-- Preguntas -->
+        <div id="section-preguntas" class="section-view hidden">
+            <div class="section-placeholder">
+                <i data-lucide="message-circle" class="placeholder-icon"></i>
+                <h2>Preguntas</h2>
+                <p>Próximamente...</p>
+            </div>
+        </div>
+
+        <!-- Competencia (dashboard actual) -->
+        <div id="section-competencia" class="section-view hidden">
             <div class="section-header">
                 <h2><i data-lucide="layout-grid"></i> Resumen del Mercado</h2>
             </div>
@@ -138,7 +255,9 @@
                 </div>
             </div>
         </div>
+        </div>
     </main>
+    </div>
 
     <!-- Modal CRUD -->
     <div id="modalOverlay" class="modal-overlay">
@@ -196,6 +315,7 @@
     <script src="js/modules/products.js"></script>
     <script src="js/modules/dashboard.js"></script>
     <script src="js/modules/modal.js"></script>
+    <script src="js/modules/navigation.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

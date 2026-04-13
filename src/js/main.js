@@ -6,7 +6,8 @@ class App {
             connectionIndicator: document.getElementById('connectionIndicator'),
             connectionText: document.getElementById('connectionText'),
             dbConfigSection: document.getElementById('dbConfigSection'),
-            dashboardSection: document.getElementById('dashboardSection'),
+            sectionCompetencia: document.getElementById('section-competencia'),
+            sidebar: document.getElementById('sidebar'),
             headerActions: document.getElementById('headerActions'),
             supabaseUrl: document.getElementById('supabaseUrl'),
             supabaseKey: document.getElementById('supabaseKey'),
@@ -81,8 +82,12 @@ class App {
             this.elements.connectionText.textContent = CONFIG.MESSAGES.CONNECTED;
 
             this.elements.dbConfigSection.classList.add('hidden');
-            this.elements.dashboardSection.classList.remove('hidden');
+            this.elements.sectionCompetencia.classList.remove('hidden');
             this.elements.headerActions.classList.remove('hidden');
+            this.elements.sidebar.classList.remove('hidden');
+
+            // Activar la sección Competencia por defecto
+            navigationModule.setActive('competencia');
 
             await this._loadDashboard();
         } catch (error) {
