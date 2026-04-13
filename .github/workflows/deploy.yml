@@ -1,21 +1,15 @@
-name: Deploy to Spaceship
+# WORKFLOW DESHABILITADO - Usar script local ./deploy.sh en su lugar
+# Spaceship solo soporta FTP, lo que causa timeouts desde GitHub Actions
+# Ver README.md para instrucciones de deploy manual
+
+name: Deploy Disabled
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  disabled:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Deploy via SFTP with sshpass
-      run: |
-        apt-get update && apt-get install -y sshpass rsync
-        sshpass -p "${{ secrets.FTP_PASSWORD }}" rsync -avz --delete \
-          -e "ssh -o StrictHostKeyChecking=no" \
-          ./src/ \
-          "${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}:${{ secrets.FTP_REMOTE_PATH }}"
-      shell: bash
+      - run: |
+          echo "Deploy manual: ejecutar ./deploy.sh localmente"
