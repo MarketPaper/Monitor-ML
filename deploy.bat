@@ -12,7 +12,7 @@ REM Variables
 set FTP_HOST=mlibretools.aigents.com.ar
 set FTP_USER=ftplay@mlibretools.aigents.com.ar
 set FTP_PASS=7948.TresSeis
-set FTP_PATH=/home/jmyqoqyfsb/mlibretools.aigents.com.ar/
+set FTP_PATH=/home/jmyqoqyfsb/mlibretools.aigents.com.ar
 set LOCAL_PATH=src
 
 REM Crear archivo temporal con comandos FTP
@@ -21,22 +21,28 @@ set TEMP_FTP=%TEMP%\ftp_commands.txt
     echo open %FTP_HOST%
     echo %FTP_USER%
     echo %FTP_PASS%
+    echo binary
     echo cd %FTP_PATH%
     echo lcd %LOCAL_PATH%
-    echo mput *
+    echo mput -R *
+    echo ls -la
     echo quit
 ) > %TEMP_FTP%
 
 echo Conectando a %FTP_HOST%...
+echo Path remoto: %FTP_PATH%
+echo Path local: %LOCAL_PATH%
+echo.
+
 ftp -s:%TEMP_FTP%
 
 if %errorlevel% equ 0 (
     echo.
-    echo [OK] Deploy completado exitosamente!
-    echo Sitio: http://mlibretools.aigents.com.ar/
+    echo [OK] Deploy completado!
+    echo Sitio: http://mlibretools.aigents.com.ar/index.html
 ) else (
     echo.
-    echo [ERROR] Hubo un problema en el deploy
+    echo [ERROR] Problema en el deploy - verifica credenciales FTP
 )
 
 REM Limpiar archivo temporal
