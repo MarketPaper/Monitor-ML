@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Deploy to SFTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.6
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
@@ -20,3 +20,7 @@ jobs:
         local-dir: ./src/
         server-dir: ${{ secrets.FTP_REMOTE_PATH }}
         protocol: ftp
+        dangerous-clean-slate: false
+        exclude: |
+          **/.git*
+          **/node_modules/**
