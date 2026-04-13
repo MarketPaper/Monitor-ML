@@ -17,7 +17,7 @@ except Exception:
 FTP_HOST = "mlibretools.aigents.com.ar"
 FTP_USER = "ftplay@mlibretools.aigents.com.ar"
 FTP_PASS = "7948.TresSeis"
-FTP_PATH = "/home/jmyqoqyfsb/mlibretools.aigents.com.ar"
+FTP_PATH = "/"  # el login es chroot: / ES el webroot
 LOCAL_PATH = "src"
 
 socket.setdefaulttimeout(60)
