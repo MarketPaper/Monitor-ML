@@ -1,0 +1,29 @@
+# === CREDENCIALES Y SECRETOS ===
+.env
+.env.local
+.env.*.local
+ml_token.json
+
+# === DEPENDENCIAS ===
+node_modules/
+package-lock.json
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# === SISTEMA ===
+.DS_Store
+Thumbs.db
+
+# === ARCHIVOS TEMPORALES ===
+*.log
+*.tmp
+temp/
+
+# === SITEGROUND ESPECÍFICO ===
+# No subir el HTML viejo
+MONITOR-ML-HTML.htm

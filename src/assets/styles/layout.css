@@ -1,0 +1,151 @@
+/* === LAYOUT === */
+
+/* Header */
+header {
+    background-color: var(--color-surface);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-title-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.app-icon {
+    color: var(--color-accent);
+    width: 32px;
+    height: 32px;
+}
+
+.status-and-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #6B7280;
+}
+
+.status-indicator.connected {
+    background-color: var(--color-positive);
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
+}
+
+.status-indicator.error {
+    background-color: var(--color-negative);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Main Content */
+main {
+    padding: 2rem 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.section-header h2 i,
+.section-header h2 svg {
+    color: var(--color-accent);
+    width: 20px;
+    height: 20px;
+}
+
+/* DB Config Section */
+.db-config-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px);
+}
+
+.db-config-card {
+    background-color: var(--color-surface);
+    padding: 2.5rem;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 550px;
+}
+
+.db-config-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.db-config-icon {
+    color: var(--color-accent);
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+}
+
+.db-config-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.db-config-header p {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .status-and-actions {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+
+    main {
+        padding: 1rem;
+    }
+}

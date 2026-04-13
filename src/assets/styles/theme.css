@@ -1,0 +1,21 @@
+/* === TEMA OSCURO === */
+:root {
+    --color-bg: #0A0A0B;
+    --color-surface: #18181B;
+    --color-border: #27272A;
+    --color-accent: #38BDF8;
+    --color-accent-hover: #7DD3FC;
+    --color-text-primary: #F3F4F6;
+    --color-text-muted: #9CA3AF;
+    --color-positive: #4ADE80;
+    --color-negative: #F87171;
+    --font-family: 'Inter', sans-serif;
+    --font-size-base: 14px;
+    --border-radius-lg: 12px;
+    --border-radius-md: 8px;
+    --border-radius-sm: 4px;
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* Para future dark mode switch, agregar aquí :root.light-mode { --color-bg: ... } */

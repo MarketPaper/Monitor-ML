@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor de Competencia ML - Profesional</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos modulares -->
+    <link rel="stylesheet" href="assets/styles/theme.css">
+    <link rel="stylesheet" href="assets/styles/base.css">
+    <link rel="stylesheet" href="assets/styles/layout.css">
+    <link rel="stylesheet" href="assets/styles/components.css">
+
+    <!-- Librerías externas -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-title-group">
+            <i data-lucide="bar-chart-3" class="app-icon"></i>
+            <h1>Monitor de Competencia ML</h1>
+        </div>
+        <div class="status-and-actions">
+            <div class="connection-status">
+                <span id="connectionIndicator" class="status-indicator"></span>
+                <span id="connectionText">No conectado</span>
+            </div>
+            <div id="headerActions" class="header-actions hidden">
+                <button class="btn btn-secondary" id="refreshBtn" title="Actualizar datos">
+                    <i data-lucide="refresh-cw"></i>
+                </button>
+                <button class="btn btn-primary" id="addProductBtn">
+                    <i data-lucide="plus-circle"></i> Agregar Producto
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Sección de configuración de DB -->
+        <div id="dbConfigSection" class="db-config-section">
+            <div class="db-config-card">
+                <div class="db-config-header">
+                    <i data-lucide="database" class="db-config-icon"></i>
+                    <h2>Conectar a Supabase</h2>
+                    <p>Introduce tus credenciales para comenzar el monitoreo.</p>
+                </div>
+                <div class="form-group">
+                    <label for="supabaseUrl" class="form-label">Supabase URL</label>
+                    <input type="text" id="supabaseUrl" class="input-control" placeholder="https://xyz.supabase.co" required="">
+                </div>
+                <div class="form-group">
+                    <label for="supabaseKey" class="form-label">Supabase Anon Key</label>
+                    <input type="password" id="supabaseKey" class="input-control" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." required="">
+                </div>
+                <div class="form-group" style="margin-top: 2rem;">
+                    <button id="connectBtn" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                        <i data-lucide="link-2"></i> Conectar y Cargar Datos
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección del dashboard -->
+        <div id="dashboardSection" class="hidden">
+            <div class="section-header">
+                <h2><i data-lucide="layout-grid"></i> Resumen del Mercado</h2>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card card-primary">
+                    <div class="stat-icon-container"><i data-lucide="package"></i></div>
+                    <div class="stat-info">
+                        <p class="stat-label">Total Productos</p>
+                        <p id="totalProducts" class="stat-value">0</p>
+                    </div>
+                </div>
+                <div class="stat-card card-positive">
+                    <div class="stat-icon-container"><i data-lucide="thumbs-up"></i></div>
+                    <div class="stat-info">
+                        <p class="stat-label">Mejor Precio (Líder)</p>
+                        <p id="winningProducts" class="stat-value">0</p>
+                    </div>
+                </div>
+                <div class="stat-card card-negative">
+                    <div class="stat-icon-container"><i data-lucide="thumbs-down"></i></div>
+                    <div class="stat-info">
+                        <p class="stat-label">Perdiendo Precio</p>
+                        <p id="losingProducts" class="stat-value">0</p>
+                    </div>
+                </div>
+                <div class="stat-card card-neutral">
+                    <div class="stat-icon-container"><i data-lucide="help-circle"></i></div>
+                    <div class="stat-info">
+                        <p class="stat-label">Sin Referencia</p>
+                        <p id="noRefProducts" class="stat-value">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2><i data-lucide="table"></i> Detalle de Competencia</h2>
+            </div>
+
+            <div id="categoryTabs" class="category-tabs"></div>
+
+            <div class="table-section">
+                <div class="table-container">
+                    <table id="productsTable">
+                        <thead>
+                            <tr>
+                                <th class="col-product">Producto / SKU</th>
+                                <th>Mi Link</th>
+                                <th class="col-my-price">Mi Precio (ARS)</th>
+                                <th>Comp. 1</th>
+                                <th>Comp. 2</th>
+                                <th>Comp. 3</th>
+                                <th>Comp. 4</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+
+                    <div id="emptyState" class="empty-state hidden">
+                        <i data-lucide="package-search" class="empty-icon"></i>
+                        <p class="empty-title">No hay productos en esta vista</p>
+                        <p class="empty-desc">Haz clic en el botón de "Agregar Producto" para comenzar a rastrear a tu competencia en esta categoría.</p>
+                        <button class="btn btn-primary" id="addProductFromEmptyBtn">
+                            <i data-lucide="plus-circle"></i> Agregar Mi Primer Producto
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal CRUD -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="modal-title">Agregar Producto</h3>
+                <button id="modalCloseBtn" class="modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="productId">
+                <div class="form-group">
+                    <label for="productName" class="form-label">Nombre de mi Producto *</label>
+                    <input type="text" id="productName" class="input-control" placeholder="Ej: Auriculares Sony WH-1000XM5" required="">
+                </div>
+                <div class="form-group">
+                    <label for="productCategory" class="form-label">Categoría *</label>
+                    <input type="text" id="productCategory" class="input-control" placeholder="Ej: Cajas, Cintas, Vasos..." required="">
+                </div>
+                <div class="form-group form-group-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label for="productSku" class="form-label">SKU / Referencia *</label>
+                        <input type="text" id="productSku" class="input-control" placeholder="Ej: SONY-XM5-BK" required="">
+                    </div>
+                    <div>
+                        <label for="myPrice" class="form-label">Mi Precio (ARS) *</label>
+                        <input type="text" id="myPrice" class="input-control" placeholder="Ej: 179.158,03" required="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="myUrl" class="form-label">ID de Mi Publicación (ML) *</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">https://articulo.mercadolibre.com.ar/MLA-</span>
+                        <input type="text" id="myUrl" class="input-control" placeholder="123456789" required="">
+                    </div>
+                </div>
+
+                <div style="margin-top: 2.5rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
+                    <h4 style="margin-bottom: 1.5rem; color: var(--color-text-primary); font-weight: 600;">Detalle de Competidores (Hasta 4)</h4>
+                    <div id="competitorLinksContainer"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalCancelBtn">Cancelar</button>
+                <button id="saveBtn" class="btn btn-primary">
+                    <i data-lucide="save"></i> Guardar Producto
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts modulares -->
+    <script src="js/config.js"></script>
+    <script src="js/utils/formatter.js"></script>
+    <script src="js/services/supabase.js"></script>
+    <script src="js/modules/products.js"></script>
+    <script src="js/modules/dashboard.js"></script>
+    <script src="js/modules/modal.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
